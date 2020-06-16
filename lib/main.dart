@@ -25,9 +25,11 @@ class MyApp extends StatelessWidget {
           )
         )
       ),
-      home: CategoriesScreen(),
+      //home: CategoriesScreen(),
+      //initialRoute: '/', //the flutter default is / so it is not necessary add it.
       routes: {
-        '/category-meals': (ctx) => CategoryMealsScreen()
+        '/': (ctx) => CategoriesScreen(),
+        CategoryMealsScreen.routeName: (ctx) => CategoryMealsScreen()
       },
     );
   }
