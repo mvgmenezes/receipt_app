@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/dummy_data.dart';
+import 'package:recipe_app/models/meal.dart';
 import 'package:recipe_app/widgets/meal_item.dart';
 
-class CategoryMealsScreen extends StatelessWidget {
+class CategoryMealsScreen extends StatefulWidget {
 
   //Using routes these values will passing by arguments
   /*final String categoryId;
@@ -12,27 +13,59 @@ class CategoryMealsScreen extends StatelessWidget {
 
   static const routeName = '/category-meals';
 
+  @override
+  _CategoryMealsScreenState createState() => _CategoryMealsScreenState();
+}
+
+class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
+
+  String categoryTitle;
+  List<Meal> displayedMeals;
+
+  @override
+  void initState() {
+
+    //ERROR because the initState run before the context object be loaded. so we have to put these
+    //commands below in didChangeDependecies()
+    /*final routeArgs = ModalRoute.of(context).settings.arguments as Map<String, String>;
+    final categoryId = routeArgs['id'];
+    categoryTitle = routeArgs['title'];
+    displayedMeals = DUMMY_MEALS.where((meal) => meal.categories.contains(categoryId)).toList();*/
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    final routeArgs = ModalRoute.of(context).settings.arguments as Map<String, String>;
+    final categoryId = routeArgs['id'];
+    categoryTitle = routeArgs['title'];
+    displayedMeals = DUMMY_MEALS.where((meal) => meal.categories.contains(categoryId)).toList();
+    super.didChangeDependencies();
+  }
+
+  void _removeMeal(String mealId){
+    setState(() {
+      displayedMeals.removeWhere((element) => element.id == mealId);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final routeArgs = ModalRoute.of(context).settings.arguments as Map<String, String>;
 
-    final categoryId = routeArgs['id'];
-    final categoryTitle = routeArgs['title'];
-    final categoryMeals = DUMMY_MEALS.where((meal) => meal.categories.contains(categoryId)).toList();
 
     return Scaffold(
       appBar: AppBar(title: Text(categoryTitle),),
       body: ListView.builder(itemBuilder: (ctx, index){
         return MealItem(
-          id: categoryMeals[index].id,
-          title: categoryMeals[index].title,
-          imageUrl: categoryMeals[index].imageUrl,
-          duration: categoryMeals[index].duration,
-          affordability: categoryMeals[index].affordability,
-          complexity: categoryMeals[index].complexity,
+          id: displayedMeals[index].id,
+          title: displayedMeals[index].title,
+          imageUrl: displayedMeals[index].imageUrl,
+          duration: displayedMeals[index].duration,
+          affordability: displayedMeals[index].affordability,
+          complexity: displayedMeals[index].complexity,
+          removeItem: _removeMeal,
         );
-      }, itemCount: categoryMeals.length,),
+      }, itemCount: displayedMeals.length,),
     );
   }
 }

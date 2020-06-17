@@ -70,8 +70,18 @@ class MealDetailScreen extends StatelessWidget {
               itemCount: selectedMeal.steps.length,
             ))
           ],
-        )
+        ),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.delete),
+        onPressed: () {
+          //Navigator.of(context).pop(); //remove the view from top navigator (return to the last one)
+          Navigator.of(context).pop(mealId); //remove the view from top navigator (return to the last one) and passing data
+          //canPop() - check if you can go back before you go back, good idea when you dont know how the user is on the page, if the page has many ways to access it
+
+        },
+      )
+      ,
     );
   }
 }
