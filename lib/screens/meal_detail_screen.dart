@@ -3,6 +3,10 @@ import 'package:recipe_app/dummy_data.dart';
 
 class MealDetailScreen extends StatelessWidget {
   static const routeName = '/meal-detail';
+  Function toggleFavorite;
+  Function isMealFavorite;
+
+  MealDetailScreen(this.toggleFavorite, this.isMealFavorite);
 
   Widget buildSectionTitle(BuildContext context, String text){
     return Container(
@@ -73,13 +77,15 @@ class MealDetailScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.delete),
-        onPressed: () {
+        child: Icon(
+            isMealFavorite(mealId) ? Icons.favorite : Icons.favorite_border),
+        onPressed: () => toggleFavorite(mealId),
+        /*onPressed: () {
           //Navigator.of(context).pop(); //remove the view from top navigator (return to the last one)
           Navigator.of(context).pop(mealId); //remove the view from top navigator (return to the last one) and passing data
           //canPop() - check if you can go back before you go back, good idea when you dont know how the user is on the page, if the page has many ways to access it
 
-        },
+        },*/
       )
       ,
     );

@@ -26,6 +26,7 @@ class _MyAppState extends State<MyApp> {
   };
 
   List<Meal> _availableMeals = DUMMY_MEALS;
+  List<Meal> _favoriteMeals = [];
 
   void _setFilters(Map<String,bool> filterData){
     setState(() {
@@ -49,6 +50,23 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  void _toggleFavorite(String mealId){
+    final indexMeal = _favoriteMeals.indexWhere((element) => element != mealId);
+    if (indexMeal >= 0){
+      setState(() {
+        _favoriteMeals.removeAt(indexMeal);
+      });
+    } else{
+      setState(() {
+        _favoriteMeals.add(DUMMY_MEALS.firstWhere((element) => element.id == mealId));
+      });
+    }
+  }
+
+  bool _isMealFavorite(String id){
+    return _favoriteMeals.any((element) => element.id ==id);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -70,9 +88,9 @@ class _MyAppState extends State<MyApp> {
       //home: CategoriesScreen(),
       //initialRoute: '/', //the flutter default is / so it is not necessary add it.
       routes: {
-        '/': (ctx) => TabsScreen(),
+        '/': (ctx) => TabsScreen(_favoriteMeals),
         CategoryMealsScreen.routeName: (ctx) => CategoryMealsScreen(_availableMeals),
-        MealDetailScreen.routeName: (ctx) => MealDetailScreen(),
+        MealDetailScreen.routeName: (ctx) => MealDetailScreen(_toggleFavorite,_isMealFavorite),
         FilterScreen.routeName: (ctx) => FilterScreen(_filters, _setFilters)
       },
      /* onGenerateRoute: (settings) { //define one route default with exist one route not mapped
